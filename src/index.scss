@@ -29,11 +29,17 @@ header {
    h3, p {
       margin: 0;
    }
-}
 
    svg {
       fill: black;
    }
+
+   .cart {
+      &:hover {
+         opacity: 0.7;
+      }
+   }
+}
 
 .content {
    h1 {
