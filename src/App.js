@@ -1,55 +1,99 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
+import axios from "axios";
 
-import Card from "./components/Card/Card";
 import Header from "./components/Header";
 import Drawer from "./components/Drawer";
+import Home from "./pages/Home";
+import Likes from "./pages/Likes";
 
 function App() {
    const [cartOpened, setCartOpened] = useState(false);
    const [items, setItems] = useState([]);
    const [cartItems, setCartItems] = useState([]);
+   const [searchValue, setSearchValue] = useState('');
+   const [likes, setLikes] = useState([]);
 
    useEffect(() => {
-      fetch('https://61f84295783c1d0017c44674.mockapi.io/items')
-         .then(res => res.json())
-         .then(json => setItems(json)
-      );
+      axios.get('https://61f84295783c1d0017c44674.mockapi.io/items').then(res => {
+         setItems(res.data);
+      });
+      axios.get('https://61f84295783c1d0017c44674.mockapi.io/cart').then(res => {
+         setCartItems(res.data);
+      });
+      axios.get('https://61f84295783c1d0017c44674.mockapi.io/liked').then(res => {
+         setLikes(res.data);
+      });
    }, []);
 
    const addToCart = (obj) => {
-      setCartItems(prev => [...prev, obj])
-   }
+      axios.post('https://61f84295783c1d0017c44674.mockapi.io/cart', obj);
+      setCartItems(prev => [...prev, obj]);
+   };
+
+   const removeFromCart = (id) => {
+      axios.delete(`https://61f84295783c1d0017c44674.mockapi.io/cart/${id}`);
+      setCartItems(prev => prev.filter(item => item.id !== id));
+   };
+
+   const addToLiked = async (obj) => {
+      try {
+         if (likes.find(likedObj => likedObj.id === obj.id)) {
+            axios.delete(`https://61f84295783c1d0017c44674.mockapi.io/liked/${obj.id}`);
+         } else {
+            const { data } = await axios.post('https://61f84295783c1d0017c44674.mockapi.io/liked', obj);
+            setLikes(prev => [...prev, data]);
+         }
+      } catch (error) {
+         alert("Не удалось добавить в Избранное");
+      };
+      
+   };
+
+   const onChangeSearchInput = (event) => {
+      setSearchValue(event.target.value);
+   };
 
    return (
       <div className="wrapper clear">
          {cartOpened && <Drawer 
                            onClickX={() => setCartOpened(false)}
                            items={cartItems}
-                        />}
-         <Header onClickCart={() => setCartOpened(true)} />
-         <div className='content p-40'>
-            <div className='d-flex align-center justify-between mb-40 flex-wrap'>
-               <h1>Все кроссовки</h1>
-               <div className='search-block d-flex align-center'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"/></svg>
-                  <input placeholder='Поиск'/>
-               </div>
-            </div>
+                           onRemove={removeFromCart}
+                        />
+         }
 
-            <div className='d-flex flex-wrap justify-between'>
-               {
-                  items.map((item) => (
-                     <Card 
-                        title={item.title}
-                        price={item.price}
-                        imageUrl={item.imageUrl} 
-                        onLike={() => alert('Добавили в закладки')}
-                        onPlus={(obj) => addToCart(obj)}
+         <Header onClickCart={() => setCartOpened(true)} />
+
+         <Routes>
+            <Route 
+               exact path="/" 
+               element=
+                  {
+                     <Home
+                        items={items}
+                        searchValue={searchValue}
+                        setSearchValue={setSearchValue}
+                        onChangeSearchInput={onChangeSearchInput}
+                        addToCart={addToCart}
+                        addToLiked={addToLiked}
                      />
-                  ))
-               }
-            </div>
-         </div>
+                  } 
+            />
+
+            <Route 
+               exact path="/likes" 
+               element=
+                  {
+                     <Likes 
+                        items={likes}
+                        addToLiked={addToLiked}
+                     />
+                  } 
+            />
+         </Routes>
+
+         
       </div>
    );
 }

@@ -4,9 +4,12 @@
    width: 220px;
    border-radius: 30px;
    margin-bottom: 40px;
+   margin-right: 15px;
+   margin-left: 15px;
    transition: box-shadow 0.15s ease-in-out, transform 0.15s ease-in-out;
    display: flex;
    flex-direction: column;
+   justify-content: space-between;
 
    &:hover {
       box-shadow: 0px 20px 35px rgba(0, 0, 0, 0.1);
@@ -14,8 +17,8 @@
       // cursor: pointer;
    }
 
-   .plus {
-      opacity: 0.6;
+   .plus{
+      opacity: 0.5;
       cursor: pointer;
       width: 30px;
       height: 30px;
@@ -25,6 +28,19 @@
 
       &:hover {
          background-color: lighten($color: lightgray, $amount: 10%);
+         opacity: .8;
+      }
+   }
+
+   .like {
+      opacity: 0.5;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      padding: 5px;
+
+      &:hover {
+         opacity: 1;
       }
    }
 
@@ -45,19 +61,5 @@
 
    img {
       align-self: center;
-   }
-
-   .favorite {
-      position: absolute;
-      cursor: pointer;
-
-      svg {
-         fill: lightgrey;
-         transition: fill 0.15s ease-in-out;
-
-         &:hover {
-            fill: gray;
-         }
-      }
    }
 }
