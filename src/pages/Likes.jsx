@@ -1,6 +1,11 @@
-import Card from "../components/Card/Card";
+import { useContext } from "react";
 
-function Likes({ items, addToLiked }) {
+import Card from "../components/Card/Card";
+import { AppContext } from "../App";
+
+function Likes({ addToLiked }) {
+   const {likes} = useContext(AppContext);
+
    return (
       <div className='content p-40'>
             <div className='d-flex align-center justify-between mb-40 flex-wrap'>
@@ -9,7 +14,7 @@ function Likes({ items, addToLiked }) {
 
             <div className='container d-flex flex-wrap'>
                {
-                  items
+                  likes
                      .map((item, index) => (
                         <Card
                            key={index}

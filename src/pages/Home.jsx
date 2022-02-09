@@ -1,6 +1,27 @@
 import Card from '../components/Card/Card';
 
-function Home({ items, searchValue, setSearchValue, onChangeSearchInput, addToCart, addToLiked }) {
+import { AppContext } from '../App';
+import { useContext } from 'react';
+
+function Home({ items, searchValue, setSearchValue, onChangeSearchInput, addToCart, addToLiked, isLoading }) {
+   const {isItemAdded} = useContext(AppContext);
+
+   const renderItems = () => {
+      return (
+         isLoading
+         ? [...Array(8)]
+         : items.filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()))).map((item, index) => (
+         <Card
+            key={index}
+            onLike={(obj) => addToLiked(obj)}
+            onPlus={(obj) => addToCart(obj)}
+            added={isItemAdded(item && item.id)}
+            {...item}
+            loading={isLoading}
+         />
+      ))
+   }
+
    return (
       <div className='content p-40'>
             <div className='d-flex align-center justify-between mb-40 flex-wrap'>
@@ -14,16 +35,7 @@ function Home({ items, searchValue, setSearchValue, onChangeSearchInput, addToCa
 
             <div className='container d-flex flex-wrap'>
                {
-                  items
-                     .filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
-                     .map((item, index) => (
-                        <Card
-                           key={index}
-                           onLike={(obj) => addToLiked(obj)}
-                           onPlus={(obj) => addToCart(obj)}
-                           {...item}
-                        />
-                     ))
+                  renderItems()
                }
             </div>
          </div>

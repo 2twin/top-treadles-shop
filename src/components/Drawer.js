@@ -1,4 +1,37 @@
+import { useContext, useState } from "react";
+import { AppContext } from "../App";
+import axios from "axios";
+
+import Info from "./Info";
+
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
 function Drawer({ onClickX, onRemove, items = [] }) {
+   const { cartItems, setCartItems } = useContext(AppContext);
+   const [orderId, setOrderId] = useState(null);
+   const [isOrdered, setIsordered] = useState(false);
+   const [isLoading, setIsLoading] = useState(false);
+
+   const onClickOrder = async () => {
+      try {
+         setIsLoading(true);
+         const {data} = await axios.post('https://61f84295783c1d0017c44674.mockapi.io/orders', {items: cartItems});
+         setOrderId(data.id);
+         setIsordered(true);
+         setCartItems([]);
+
+         for (let i = 0; i < cartItems.length; i++) {
+            const item = cartItems[i];
+            axios.delete('https://61f84295783c1d0017c44674.mockapi.io/cart/' + item.id);
+            await delay(1000);
+         }
+
+      } catch (error) {
+         alert("Не удалось создать заказ :(");
+      };
+      setIsLoading(false);
+   };
+
    return (
       <div className='overlay'>
          <div className='drawer p-30 d-flex flex-column'>
@@ -9,17 +42,17 @@ function Drawer({ onClickX, onRemove, items = [] }) {
 
             {
                items.length > 0 ? (
-               <div>
+               <div className="d-flex flex-column flex" >
                   <div className='items'>
                      {
                         items.map((obj) => (
-                           <div className='cartItem d-flex align-center mb-20'>
+                           <div key={obj.id} className='cartItem d-flex align-center mb-20'>
                               <img className='mr-20' src={obj.imageUrl} alt='Sneakers' width={70} height={70}/>
                               <div className='mr-20'>
                                  <p className='mb-5'>{obj.title}</p>
                                  <b>{obj.price} руб.</b>
                               </div>
-                              <svg onClick={() => onRemove(obj.id)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="50" height="30"><path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"/><path d="M9 10h2v8H9zm4 0h2v8h-2z"/></svg>
+                              <img className="trash" src="../../img/delete.png" onClick={() => onRemove(obj.id)} alt="delete"/>
                            </div>
                         ))
                      }
@@ -37,7 +70,7 @@ function Drawer({ onClickX, onRemove, items = [] }) {
                            <b>1 074 руб.</b>
                         </li>
                      </ul>
-                     <button className='greenButton'>
+                     <button disabled={isLoading} className='greenButton' onClick={onClickOrder}>
                         Оформить заказ
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"/></svg>
                      </button>
@@ -45,15 +78,11 @@ function Drawer({ onClickX, onRemove, items = [] }) {
                </div>
 
                ) : (
-               <div className="cartEmpty d-flex align-center justify-center flex-column flex">
-                  <img className="mb-20" width={120} height={120} src="/img/empty.png" alt="Empty" />
-                  <h2>Корзина пустая</h2>
-                  <p className="opacity-6">Добавьте хотя бы один товар, чтобы сделать заказ</p>
-                  <button className='greenButton' onClick={onClickX}>
-                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"/></svg>
-                     Вернуться назад
-                  </button>
-               </div>   
+                  <Info 
+                     title={isOrdered ? "Заказ оформлен" : "Корзина пустая"} 
+                     description={isOrdered ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке` : "Добавьте хотя бы один товар, чтобы сделать заказ"} 
+                     image={isOrdered? "/img/ordered.jpg" : "/img/empty.png"} 
+                  />
                )
             }
 
