@@ -1,16 +1,19 @@
-import { useContext, useState } from "react";
-import { AppContext } from "../App";
+import { useCart } from "../../hooks/useCart";
+import React, { useState } from "react";
 import axios from "axios";
 
-import Info from "./Info";
+import Info from "../Info";
+
+import styles from "./Drawer.module.scss";
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-function Drawer({ onClickX, onRemove, items = [] }) {
-   const { cartItems, setCartItems } = useContext(AppContext);
+function Drawer({ onClickX, onRemove, items = [], opened }) {
+   const { cartItems, setCartItems, totalPrice } = useCart();
    const [orderId, setOrderId] = useState(null);
    const [isOrdered, setIsordered] = useState(false);
    const [isLoading, setIsLoading] = useState(false);
+   const fee = Math.floor(totalPrice * 0.05);
 
    const onClickOrder = async () => {
       try {
@@ -33,8 +36,8 @@ function Drawer({ onClickX, onRemove, items = [] }) {
    };
 
    return (
-      <div className='overlay'>
-         <div className='drawer p-30 d-flex flex-column'>
+      <div className={`${styles.overlay} ${opened ? styles.overlayVisible : styles.overlay}`}>
+         <div className={styles.drawer}>
             <h2 className='d-flex justify-between mb-30'>
                Корзина {' '}
                <img onClick={onClickX} src='/img/x.svg' alt="Close" />
@@ -62,12 +65,12 @@ function Drawer({ onClickX, onRemove, items = [] }) {
                         <li>
                            <span>Итого:</span>
                            <div></div>
-                           <b>21 498 руб.</b>
+                           <b>{Math.floor(totalPrice + fee)} руб.</b>
                         </li>
                         <li>
                            <span>Налог 5%:</span>
                            <div></div>
-                           <b>1 074 руб.</b>
+                           <b>{fee} руб.</b>
                         </li>
                      </ul>
                      <button disabled={isLoading} className='greenButton' onClick={onClickOrder}>

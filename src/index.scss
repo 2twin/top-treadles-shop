@@ -23,6 +23,14 @@ header {
    background-color: thistle;
    border-radius: 20px 20px 0 0;
 
+   .headerRight .cart img {
+      transform: translateY(-2px);
+   }
+
+   .headerRight .user img {
+      transform: translateY(-2px);
+   }
+
    img {
       margin-right: 15px;
    }
@@ -102,50 +110,13 @@ header {
    }
 }
 
-.overlay {
-   position: fixed;
-   left: 0;
-   top: 0;
-   width: 100%;
-   height: 100%;
-   background: rgba(0, 0, 0, 0.5);
-   z-index: 1;
-}
-
-.drawer {
-   position: absolute;
-   width: 420px;
-   right: 0;
-   height: 100%;
-   background: #fff;
-   box-shadow: -10px 4px 24px rgba(0, 0, 0, 0.1);
-
-   .items {
-      overflow: auto;
-      margin-bottom: 40px;
-   }
-
-   h2 {
-      margin: 0;
-
-      img {
-         cursor: pointer;
-         opacity: 0.6;
-         transition: opacity 0.15s ease-in-out;
-
-         &:hover {
-         opacity: 1;
-         }
-      }
-   }
-}
-
 .cartItem {
    border: 1px solid lightgrey;
    border-radius: 15px;
    overflow: hidden;
    padding-bottom: 15px;
    padding-left: 15px;
+   justify-content: space-between;
 
    p {
       font-size: 14px;
@@ -160,7 +131,6 @@ header {
       margin-top: 15px;
       margin-right: 15px;
       opacity: 0.5;
-      // border: 1px solid lightgrey;
       border-radius: 8px;
       transition: opacity 0.15s ease-in-out;
       background: #FF4238;
@@ -172,6 +142,10 @@ header {
          cursor: pointer;
       }
    }
+
+   img {
+      width: 80px;
+   }
 }
 
 .cartEmpty {
@@ -179,11 +153,12 @@ header {
 
    .greenButton {
       position: relative;
+      width: 300px;
 
       svg {
          position: absolute;
          fill: #fff;
-         left: 70px;
+         left: 30px;
          top: 15px;
          transition: transform 0.15s ease-in-out;
       }

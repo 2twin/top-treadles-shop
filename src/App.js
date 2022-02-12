@@ -3,9 +3,10 @@ import { Route, Routes } from "react-router-dom";
 import axios from "axios";
 
 import Header from "./components/Header";
-import Drawer from "./components/Drawer";
+import Drawer from "./components/Drawer/Drawer";
 import Home from "./pages/Home";
 import Likes from "./pages/Likes";
+import Orders from "./pages/Orders";
 
 export const AppContext = React.createContext({});
 
@@ -19,6 +20,7 @@ function App() {
 
    useEffect(() => {
       async function fetchData() {
+         try {
          setIsLoading(true);
          const cartResponse = await axios.get('https://61f84295783c1d0017c44674.mockapi.io/cart');
          const likedResponse = await axios.get('https://61f84295783c1d0017c44674.mockapi.io/liked');
@@ -28,29 +30,36 @@ function App() {
          setCartItems(cartResponse.data);
          setLikes(likedResponse.data);
          setItems(itemsResponse.data);
-
+         } catch (error) {
+            alert('Ошибка при загрузке страницы');
+         }
       };
 
       fetchData();
    }, []);
 
-   const addToCart = (obj) => {
+   const addToCart = async (obj) => {
       try {
-         if (cartItems.find(item => +item.id === +obj.id)) {
-            axios.delete(`https://61f84295783c1d0017c44674.mockapi.io/cart/${obj.id}`);
-            setCartItems(prev => prev.filter(item => +item.id !== +obj.id));
+         const findItem = cartItems.find(item => +item.parentId === +obj.id);
+         if (findItem) {
+            setCartItems(prev => prev.filter(item => +item.parentId !== +obj.id));
+            await axios.delete(`https://61f84295783c1d0017c44674.mockapi.io/cart/${findItem.id}`);
          } else {
-            axios.post('https://61f84295783c1d0017c44674.mockapi.io/cart', obj);
-            setCartItems(prev => [...prev, obj]);
+            const { data } = await axios.post('https://61f84295783c1d0017c44674.mockapi.io/cart', obj);
+            setCartItems(prev => [...prev, data]);
          }
       } catch (error) {
-         alert("Не удалось добавить в корзину");
+         alert("Не удалось добавить товар в корзину");
       }
    };
 
    const removeFromCart = (id) => {
-      axios.delete(`https://61f84295783c1d0017c44674.mockapi.io/cart/${id}`);
-      setCartItems(prev => prev.filter(item => item.id !== id));
+      try {
+         axios.delete(`https://61f84295783c1d0017c44674.mockapi.io/cart/${id}`);
+         setCartItems(prev => prev.filter(item => +item.id !== +id));         
+      } catch (error) {
+         alert("Не удалось удалить товар")
+      }
    };
 
    const addToLiked = async (obj) => {
@@ -73,18 +82,18 @@ function App() {
    };
 
    const isItemAdded = (id) => {
-      return cartItems.some(obj => +obj.id === +id)
+      return cartItems.some(obj => +obj.parentId === +id)
    }
 
    return (
-      <AppContext.Provider value={{ items, cartItems, likes, isItemAdded, setCartOpened, setCartItems }} >
+      <AppContext.Provider value={{ items, cartItems, likes, isItemAdded, setCartOpened, setCartItems, addToCart, addToLiked }} >
          <div className="wrapper clear">
-            {cartOpened && <Drawer
-                              onClickX={() => setCartOpened(false)}
-                              items={cartItems}
-                              onRemove={removeFromCart}
-                           />
-            }
+            <Drawer
+               onClickX={() => setCartOpened(false)}
+               items={cartItems}
+               onRemove={removeFromCart}
+               opened={cartOpened}
+            />
          
             <Header onClickCart={() => setCartOpened(true)} />
          
@@ -114,6 +123,14 @@ function App() {
                            items={likes}
                            addToLiked={addToLiked}
                         />
+                     } 
+               />
+
+               <Route 
+                  exact path="/orders" 
+                  element=
+                     {
+                        <Orders />
                      } 
                />
             </Routes>

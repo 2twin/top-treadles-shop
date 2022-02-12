@@ -6,13 +6,14 @@ import { AppContext } from '../../App';
 function Card({id, onPlus, title, price, imageUrl, onLike, liked = false, loading = false }) {
    const { isItemAdded } = useContext(AppContext);
    const [isLiked, setIsLiked] = useState(liked);
+   const object = { title, price, imageUrl, id, parentId: id };
 
    const onClickPlus = () => {
-      onPlus({title, price, imageUrl, id});
+      onPlus(object);
    };
 
    const onClickLike = () => {
-      onLike({id, title, price, imageUrl});
+      onLike(object);
       setIsLiked(!isLiked);
    };
 
@@ -27,7 +28,6 @@ function Card({id, onPlus, title, price, imageUrl, onLike, liked = false, loadin
                viewBox="0 0 174 266"
                backgroundColor="#f3f3f3"
                foregroundColor="#ecebeb"
-               // {...props}
             >
                <rect x="0" y="0" rx="10" ry="10" width="174" height="160" /> 
                <rect x="0" y="180" rx="5" ry="5" width="150" height="15" /> 
@@ -39,11 +39,11 @@ function Card({id, onPlus, title, price, imageUrl, onLike, liked = false, loadin
             <>
                <div className={styles.favorite}>
                   <div onClick={onClickLike}>
-                     <img 
+                     {onLike && <img 
                         className={styles.like}
                         src={isLiked ? '/img/liked.svg' : '/img/unliked.svg'}
                         alt='Like' width={11} height={11}
-                     />
+                     />}
                   </div>
                </div>
                <img src={imageUrl} alt='Sneakers' width={133} height={120}/>
@@ -53,12 +53,13 @@ function Card({id, onPlus, title, price, imageUrl, onLike, liked = false, loadin
                      <span>Цена:</span>
                      <b>{price} руб.</b>
                   </div>
-                  <img 
+                  {onPlus && <img 
                      className={styles.plus}
                      src={isItemAdded(id) ? '/img/check.svg' : '/img/plus.svg'}
+                     style={isItemAdded(id) ? {background: 'lightgreen'} : {background: 'transparent'}}
                      alt='Plus' width={11} height={11}
                      onClick={onClickPlus}
-                  />
+                  />}
                </div> 
             </>       
          }
