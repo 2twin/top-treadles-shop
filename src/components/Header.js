@@ -8,7 +8,7 @@ function Header(props) {
       <header className='d-flex justify-between align-center p-40'>
          <Link to="/">
             <div className='d-flex align-center'>
-               <img src='/img/logo.png' width={40} height={40} alt=''/>
+               <img src='/img/logo2.png' width={60} height={60} alt=''/>
                <div>
                   <h3 className='text-uppercase'>Top Treadles</h3>
                   <p className='opacity-6'>Магазин кроссовок</p>

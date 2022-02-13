@@ -35,6 +35,12 @@ function Drawer({ onClickX, onRemove, items = [], opened }) {
       setIsLoading(false);
    };
 
+      if (opened) {
+         document.body.style.overflow = 'hidden';
+      } else {
+         document.body.style.overflow = 'auto';
+      }
+
    return (
       <div className={`${styles.overlay} ${opened ? styles.overlayVisible : styles.overlay}`}>
          <div className={styles.drawer}>
@@ -46,7 +52,7 @@ function Drawer({ onClickX, onRemove, items = [], opened }) {
             {
                items.length > 0 ? (
                <div className="d-flex flex-column flex" >
-                  <div className='items'>
+                  <div className={styles.items}>
                      {
                         items.map((obj) => (
                            <div key={obj.id} className='cartItem d-flex align-center mb-20'>

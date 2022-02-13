@@ -4,6 +4,7 @@ body {
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
    background-color: #e7f6ff;
+   padding: 0 calc(20px - (100vw - 100%)) 0 0;
 }
 
 * {
@@ -20,7 +21,6 @@ body {
 
 header {
    border-bottom: 1px solid #EAEAEA;
-   background-color: thistle;
    border-radius: 20px 20px 0 0;
 
    .headerRight .cart img {
