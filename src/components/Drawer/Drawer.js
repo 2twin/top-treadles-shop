@@ -46,7 +46,7 @@ function Drawer({ onClickX, onRemove, items = [], opened }) {
          <div className={styles.drawer}>
             <h2 className='d-flex justify-between mb-30'>
                Корзина {' '}
-               <img onClick={onClickX} src='/img/x.svg' alt="Close" />
+               <img onClick={onClickX} src='img/x.svg' alt="Close" />
             </h2>
 
             {
@@ -90,7 +90,7 @@ function Drawer({ onClickX, onRemove, items = [], opened }) {
                   <Info 
                      title={isOrdered ? "Заказ оформлен" : "Корзина пустая"} 
                      description={isOrdered ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке` : "Добавьте хотя бы один товар, чтобы сделать заказ"} 
-                     image={isOrdered? "/img/ordered.jpg" : "/img/empty.png"} 
+                     image={isOrdered? "img/ordered.jpg" : "img/empty.png"} 
                   />
                )
             }
