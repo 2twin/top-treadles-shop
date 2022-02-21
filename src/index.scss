@@ -80,6 +80,8 @@ header {
 }
 
 .search-block {
+   display: flex;
+   align-items: center;
    border: 1px solid lightgrey;
    padding-left: 5px;
    border-radius: 10px;
@@ -239,4 +241,110 @@ header {
    &:active {
       background: lighten($color: #5FD643, $amount: 5%);
    }
+}
+
+@media screen and (max-width: 1099px) {
+  body {
+    padding: 0;
+  }
+
+  .container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+}
+
+@media screen and (max-width: 1082px) {
+  .wrapper {
+    margin: 0px auto;
+    border-radius: 0px;
+  }
+
+  header {
+    border-radius: 0px;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  .content {
+
+    .search-block {
+      input {
+        width: 80px;
+      }
+
+      input::placeholder {
+        font-size: 14px;
+      }
+
+      svg {
+        width: 20px;
+      }
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+}
+
+
+@media screen and (max-width: 516px) {
+  header {
+    h3, p {
+      visibility: hidden;
+    }
+
+    img {
+      width: 80px;
+      height: 80px;
+      margin-right: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+
+    h3, p {
+      visibility: visible;
+    }
+
+    img {
+      width: 60px;
+      height: 60px;
+    }
+  }
+}
+
+@media screen and (max-width: 392px) {
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      text-align: center;
+      align-self: center;
+      margin-bottom: 30px;
+    }
+
+    .search-block {
+      align-self: center;
+      width: 100%;
+    }
+  }
+
+  header {
+    img {
+      margin-bottom: 10px;
+      margin-right: 10px;
+    }
+  }
 }

@@ -46,7 +46,7 @@ function Card({id, onPlus, title, price, imageUrl, onLike, liked = false, loadin
                      />}
                   </div>
                </div>
-               <img src={imageUrl} alt='Sneakers' width={133} height={120}/>
+               <img src={imageUrl} alt='Sneakers'/>
                <h5>{title}</h5>
                <div className='d-flex justify-between align-center'>
                   <div className='d-flex flex-column'>

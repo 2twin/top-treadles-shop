@@ -56,3 +56,21 @@
       transform: translateX(0);
    }
 }
+
+@media screen and (max-width: 940px) {
+  .drawer {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .drawer {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  .drawer {
+    width: 100%;
+  }
+}
